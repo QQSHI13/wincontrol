@@ -30,4 +30,4 @@ python server.py
 
 ## Questions?
 
-Open an issue or reach out on the OpenClaw Discord.
+Open an issue or create a discussion under QQSHI13/QQSHI13.
