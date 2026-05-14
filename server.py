@@ -62,8 +62,13 @@ signal.signal(signal.SIGTERM, signal_handler)  # Termination
 atexit.register(cleanup_files)                 # Normal exit
 
 
-def capture():
-    """Capture screen and save to screenshot.jpg in skill folder"""
+def capture(quality=None):
+    """Capture screen and save to screenshot.jpg in skill folder
+    
+    Args:
+        quality: JPEG quality (1-100), uses default if None
+    """
+    q = quality if quality is not None else QUALITY
     try:
         with mss.mss() as sct:
             try:
@@ -73,11 +78,11 @@ def capture():
                 return {"ok": False, "error": f"Screen capture failed: {e}"}
             
             try:
-                im.save(SCREENSHOT_PATH, format='JPEG', quality=QUALITY, optimize=True)
+                im.save(SCREENSHOT_PATH, format='JPEG', quality=q, optimize=True)
             except Exception as e:
                 return {"ok": False, "error": f"Failed to save image: {e}"}
             
-            return {"ok": True, "path": SCREENSHOT_PATH}
+            return {"ok": True, "path": SCREENSHOT_PATH, "quality": q}
     except Exception as e:
         print(f"Capture error: {e}")
         return {"ok": False, "error": str(e)}
@@ -359,7 +364,7 @@ class ActionHandler(BaseHTTPRequestHandler):
         
         try:
             if path == '/capture':
-                cap_result = capture()
+                cap_result = capture(quality=data.get('quality'))
                 result = cap_result
             elif path == '/move':
                 result = handle_move(data.get('x'), data.get('y'))
@@ -391,7 +396,7 @@ class ActionHandler(BaseHTTPRequestHandler):
                 self._send_json({"ok": True})
             else:
                 self._send_json({"endpoints": [
-                    "POST /capture     - Capture screen, returns {path}",
+                    "POST /capture     - Capture screen, optional {quality: 1-100}",
                     "POST /move        - {x, y} - Move cursor without clicking",
                     "POST /click       - {x, y, button?}",
                     "POST /drag        - {x1, y1, x2, y2, button?}",
