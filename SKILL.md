@@ -82,9 +82,24 @@ skills/wincontrol/
 ```bash
 curl -X POST http://localhost:8767/capture
 ```
-Returns: `{"ok": true, "path": ".../screenshot.jpg"}`
+Returns: `{"ok": true, "path": ".../screenshot.jpg", "quality": 90}`
 
 Each capture overwrites `screenshot.jpg` in the skill directory. The file is automatically deleted when the server stops.
+
+**Optional quality override:**
+```bash
+# Lower quality for faster capture/smaller file
+curl -X POST http://localhost:8767/capture -H "Content-Type: application/json" -d '{"quality": 60}'
+
+# Higher quality for detailed screenshots
+curl -X POST http://localhost:8767/capture -d '{"quality": 95}'
+```
+
+| Quality | File Size (1080p) | Use Case |
+|---------|-------------------|----------|
+| 60 | ~80KB | Fast capture, quick checks |
+| 90 (default) | ~150KB | Clear UI text, general use |
+| 95 | ~200KB | Maximum detail, presentations |
 
 ### Mouse Actions
 ```bash

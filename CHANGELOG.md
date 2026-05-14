@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0] - 2026-05-14
+
+### Added
+- **Quality parameter for `/capture`**: Optional quality override (1-100)
+  - Body: `{"quality": 60}` for faster/smaller captures
+  - Defaults to 90 if not specified
+  - Response includes `quality` field: `{"ok": true, "path": "...", "quality": 60}`
+
+### Changed
+- **Updated docs**: README and SKILL.md now document quality feature
+- **Gitignore**: Added `.gitignore` to exclude `screenshot.jpg`
+
 ## [1.5.0] - 2026-04-12
 
 ### Added
